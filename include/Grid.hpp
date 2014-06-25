@@ -14,6 +14,9 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
+    void createNodes();
+
+private:
     const int NUM_NODES;
 
     std::vector<std::vector<Node>> m_Nodes;

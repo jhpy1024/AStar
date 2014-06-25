@@ -6,7 +6,7 @@
 class Node : public sf::Drawable
 {
 public:
-    Node(const sf::Vector2i& position);
+    explicit Node(const sf::Vector2i& position);
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
