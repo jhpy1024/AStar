@@ -1,6 +1,8 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
+#include "Grid.hpp"
+
 #include <SFML/Graphics.hpp>
 
 class Application
@@ -19,6 +21,8 @@ private:
     const int NUM_NODES;
 
     sf::RenderWindow m_Window;
+
+    Grid m_Grid;
 };
 
 #endif

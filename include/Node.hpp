@@ -6,7 +6,7 @@
 class Node : public sf::Drawable
 {
 public:
-    explicit Node(const sf::Vector2i& position);
+    Node(const sf::Vector2i& position, const sf::Vector2i& size);
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
@@ -33,6 +33,9 @@ private:
     sf::Text m_ScoreText;
     sf::Text m_MovementCostText;
     sf::Text m_HeuristicCostText;
+
+    sf::Vector2i m_Size;
+    sf::RectangleShape m_Shape;
 };
 
 #endif

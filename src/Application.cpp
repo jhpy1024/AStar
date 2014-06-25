@@ -5,6 +5,7 @@ Application::Application(int width, int height, int numNodes)
     , HEIGHT(height)
     , NUM_NODES(numNodes)
     , m_Window(sf::VideoMode(WIDTH, HEIGHT), "A* Algorithm", sf::Style::Close)
+    , m_Grid(NUM_NODES, { WIDTH, HEIGHT })
 {
 
 }
@@ -43,5 +44,6 @@ void Application::update()
 void Application::draw()
 {
     m_Window.clear();
+    m_Window.draw(m_Grid);
     m_Window.display();
 }
