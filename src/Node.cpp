@@ -9,8 +9,7 @@ Node::Node(const sf::Vector2i& position, const sf::Vector2i& size)
     , m_Size(size)
     , m_Shape(sf::Vector2f(size))
 {
-    m_Shape.setPosition(sf::Vector2f(position.x * size.x, position.y * size.y));
-    m_Shape.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
+    createShape();
 }
 
 void Node::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -64,4 +63,10 @@ void Node::setHeuristicCost(int heuristicCost)
 {
     m_HeuristicCost = heuristicCost;
     m_HeuristicCostText.setString("H=" + std::to_string(heuristicCost));
+}
+
+void Node::createShape()
+{
+    m_Shape.setPosition(sf::Vector2f(m_Position.x * m_Size.x, m_Position.y * m_Size.y));
+    m_Shape.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
 }

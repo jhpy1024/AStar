@@ -22,6 +22,9 @@ public:
     void setHeuristicCost(int heuristicCost);
 
 private:
+    void createShape();
+
+private:
     sf::Vector2i m_Position;
     sf::Vector2i m_ParentPosition;
 
