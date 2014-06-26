@@ -65,6 +65,11 @@ void Node::setHeuristicCost(int heuristicCost)
     m_HeuristicCostText.setString("H=" + std::to_string(heuristicCost));
 }
 
+void Node::setColor(const sf::Color& color)
+{
+    m_Shape.setFillColor(color);
+}
+
 void Node::createShape()
 {
     m_Shape.setPosition(sf::Vector2f(m_Position.x * m_Size.x, m_Position.y * m_Size.y));

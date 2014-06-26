@@ -20,6 +20,7 @@ public:
     void setScore(int score);
     void setMovementCost(int movementCost);
     void setHeuristicCost(int heuristicCost);
+    void setColor(const sf::Color& color);
 
 private:
     void createShape();
