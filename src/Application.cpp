@@ -96,7 +96,7 @@ void Application::handleKeyPress(const sf::Event& event)
 
 void Application::beginSearch()
 {
-
+    m_Grid.beginSearch();
 }
 
 void Application::reset()
