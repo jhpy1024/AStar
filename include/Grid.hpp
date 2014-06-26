@@ -15,12 +15,17 @@ public:
 
 private:
     void createNodes();
+    void createLines();
+
+    void drawNodes(sf::RenderTarget& target, sf::RenderStates states) const;
+    void drawLines(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:
     const int NUM_NODES;
     const sf::Vector2i GRID_SIZE;
 
     std::vector<std::vector<Node>> m_Nodes;
+    std::vector<sf::RectangleShape> m_Lines;
 };
 
 #endif

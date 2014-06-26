@@ -6,17 +6,13 @@ Grid::Grid(int numNodes, const sf::Vector2i& gridSize)
     , m_Nodes(NUM_NODES, std::vector<Node>(NUM_NODES, Node({ -1, -1 }, { 0, 0 })))
 {
     createNodes();
+    createLines();
 }
 
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    for (int x = 0; x < NUM_NODES; ++x)
-    {
-        for (int y = 0; y < NUM_NODES; ++y)
-        {
-            target.draw(m_Nodes[x][y]);
-        }
-    }
+    drawNodes(target, states);
+    drawLines(target, states);
 }
 
 void Grid::createNodes()
@@ -32,4 +28,42 @@ void Grid::createNodes()
             m_Nodes[x][y] = node;
         }
     }
+}
+
+void Grid::createLines()
+{
+    for (int x = 0; x < NUM_NODES; ++x)
+    {
+        for (int y = 0; y < NUM_NODES; ++y)
+        {
+            sf::RectangleShape shape;
+            shape.setFillColor(sf::Color::Black);
+            shape.setPosition(x * (GRID_SIZE.x / NUM_NODES), y * (GRID_SIZE.y / NUM_NODES));
+
+            // Horizontal line
+            shape.setSize({ GRID_SIZE.x, 1.f });
+            m_Lines.push_back(shape);
+
+            // Vertical line
+            shape.setSize({ 1.f, GRID_SIZE.y });
+            m_Lines.push_back(shape);
+        }
+    }
+}
+
+void Grid::drawNodes(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    for (int x = 0; x < NUM_NODES; ++x)
+    {
+        for (int y = 0; y < NUM_NODES; ++y)
+        {
+            target.draw(m_Nodes[x][y]);
+        }
+    }
+}
+
+void Grid::drawLines(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    for (auto& line : m_Lines)
+        target.draw(line);
 }
