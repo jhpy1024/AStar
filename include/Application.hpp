@@ -16,6 +16,9 @@ public:
     void draw();
 
 private:
+    void handleMousePress(const sf::Event& event);
+
+private:
     const int WIDTH;
     const int HEIGHT;
     const int NUM_NODES;
@@ -23,6 +26,13 @@ private:
     sf::RenderWindow m_Window;
 
     Grid m_Grid;
+
+    bool m_IsStartSet;
+    bool m_IsEndSet;
+
+    sf::Vector2i m_StartPosition;
+    sf::Vector2i m_EndPosition;
+    std::vector<sf::Vector2i> m_Walls;
 };
 
 #endif

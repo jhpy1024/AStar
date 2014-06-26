@@ -13,6 +13,11 @@ public:
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+    void setNodeColor(const sf::Vector2i& position, const sf::Color& color);
+
+    sf::Vector2i getGridSize() const;
+    sf::Vector2i getNodeSize() const;
+
 private:
     void createNodes();
     void createLines();

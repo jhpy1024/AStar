@@ -15,6 +15,21 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
     drawLines(target, states);
 }
 
+void Grid::setNodeColor(const sf::Vector2i& position, const sf::Color& color)
+{
+    m_Nodes[position.x][position.y].setColor(color);
+}
+
+sf::Vector2i Grid::getGridSize() const
+{
+    return GRID_SIZE;
+}
+
+sf::Vector2i Grid::getNodeSize() const
+{
+    return { GRID_SIZE.x / NUM_NODES, GRID_SIZE.y / NUM_NODES };
+}
+
 void Grid::createNodes()
 {
     for (int x = 0; x < NUM_NODES; ++x)
