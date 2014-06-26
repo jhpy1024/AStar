@@ -32,6 +32,7 @@ private:
     void drawLines(sf::RenderTarget& target, sf::RenderStates states) const;
 
     int calculateHeuristicCost(const sf::Vector2i& from, const sf::Vector2i& to) const;
+    float calculateDistance(const sf::Vector2i& from, const sf::Vector2i& to) const;
 
     sf::Vector2i getLowestScoredNode(const std::vector<sf::Vector2i>& nodes) const;
     std::vector<sf::Vector2i> getNeighborNodes(const sf::Vector2i& node) const;

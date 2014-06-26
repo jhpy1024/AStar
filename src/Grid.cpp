@@ -56,7 +56,7 @@ void Grid::reset()
 
 void Grid::beginSearch()
 {
-    std::vector<sf::Vector2i> closedSet;
+    std::vector<sf::Vector2i> closedSet = m_Walls;
     std::vector<sf::Vector2i> openSet = { m_StartPosition };
 
     auto& startNode = m_Nodes[m_StartPosition.x][m_StartPosition.y];
@@ -73,13 +73,27 @@ void Grid::beginSearch()
         openSet.erase(std::find(openSet.begin(), openSet.end(), currentNodePosition));
         closedSet.push_back(currentNodePosition);
 
-        for (auto& neighbor : getNeighborNodes(currentNodePosition))
+        for (auto& neighborPosition : getNeighborNodes(currentNodePosition))
         {
-            if (closedSet.find(neighbor) != closedSet.end())
+            if (std::find(closedSet.begin(), closedSet.end(), currentNodePosition) != closedSet.end())
                 continue;
 
             auto& currentNode = m_Nodes[currentNodePosition.x][currentNodePosition.y];
-            auto tentativeMovementCost = currentNode.getMovementCost() + calculateDistance()
+            auto tentativeMovementCost = currentNode.getMovementCost()
+                                       + calculateDistance(currentNodePosition, neighborPosition);
+
+            bool neighborInOpenSet = std::find(openSet.begin(), openSet.end(), neighborPosition) != openSet.end();
+            auto& neighborNode = m_Nodes[neighborPosition.x][neighborPosition.y];
+            if (!neighborInOpenSet || (tentativeMovementCost < neighborNode.getMovementCost()))
+            {
+                neighborNode.setParentPosition(currentNodePosition);
+                neighborNode.setMovementCost(tentativeMovementCost);
+                neighborNode.setScore(neighborNode.getMovementCost()
+                                    + calculateHeuristicCost(neighborPosition, m_EndPosition));
+
+                if (!neighborInOpenSet)
+                    openSet.push_back(neighborPosition);
+            }
         }
     }
 }
@@ -144,6 +158,15 @@ int Grid::calculateHeuristicCost(const sf::Vector2i& from, const sf::Vector2i& t
     auto heuristicCost = std::ceil((deltaX + deltaY) / 2);
 
     return heuristicCost;
+}
+
+float Grid::calculateDistance(const sf::Vector2i& from, const sf::Vector2i& to) const
+{
+    auto deltaX = to.x - from.x;
+    auto deltaY = to.y - from.y;
+    auto distance = std::sqrt((deltaX * deltaX) + (deltaY * deltaY));
+
+    return distance;
 }
 
 sf::Vector2i Grid::getLowestScoredNode(const std::vector<sf::Vector2i>& nodes) const
