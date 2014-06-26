@@ -33,10 +33,6 @@ private:
 
     bool m_IsStartSet;
     bool m_IsEndSet;
-
-    sf::Vector2i m_StartPosition;
-    sf::Vector2i m_EndPosition;
-    std::vector<sf::Vector2i> m_Walls;
 };
 
 #endif

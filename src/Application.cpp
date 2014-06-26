@@ -8,8 +8,6 @@ Application::Application(int width, int height, int numNodes)
     , m_Grid(NUM_NODES, { WIDTH, HEIGHT })
     , m_IsStartSet(false)
     , m_IsEndSet(false)
-    , m_StartPosition(-1, -1)
-    , m_EndPosition(-1, -1)
 {
 
 }
@@ -67,22 +65,19 @@ void Application::handleMousePress(const sf::Event& event)
 
         if (!m_IsStartSet)
         {
-            m_StartPosition = { gridX, gridY };
             m_IsStartSet = true;
             m_Window.setTitle("Set End Position");
-            m_Grid.setNodeColor(m_StartPosition, sf::Color::Green);
+            m_Grid.setStartPosition({ gridX, gridY });
         }
         else if (!m_IsEndSet)
         {
-            m_EndPosition = { gridX, gridY };
             m_IsEndSet = true;
             m_Window.setTitle("Add Walls");
-            m_Grid.setNodeColor(m_EndPosition, sf::Color::Red);
+            m_Grid.setEndPosition({ gridX, gridY });
         }
         else
         {
-            m_Walls.push_back({ gridX, gridY });
-            m_Grid.setNodeColor({ gridX, gridY }, sf::Color::Blue);
+            m_Grid.addWall({ gridX, gridY });
         }
     }
 }
@@ -111,9 +106,5 @@ void Application::reset()
     m_IsStartSet = false;
     m_IsEndSet = false;
 
-    m_StartPosition = { -1, -1 };
-    m_EndPosition = { -1, -1 };
-
-    m_Walls.clear();
     m_Grid.reset();
 }

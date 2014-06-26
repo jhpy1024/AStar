@@ -4,6 +4,8 @@ Grid::Grid(int numNodes, const sf::Vector2i& gridSize)
     : NUM_NODES(numNodes)
     , GRID_SIZE(gridSize)
     , m_Nodes(NUM_NODES, std::vector<Node>(NUM_NODES, Node({ -1, -1 }, { 0, 0 })))
+    , m_StartPosition(-1, -1)
+    , m_EndPosition(-1, -1)
 {
     createNodes();
     createLines();
@@ -15,9 +17,22 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
     drawLines(target, states);
 }
 
-void Grid::setNodeColor(const sf::Vector2i& position, const sf::Color& color)
+void Grid::setStartPosition(const sf::Vector2i& position)
 {
-    m_Nodes[position.x][position.y].setColor(color);
+    m_StartPosition = position;
+    m_Nodes[position.x][position.y].setColor(sf::Color::Green);
+}
+
+void Grid::setEndPosition(const sf::Vector2i& position)
+{
+    m_EndPosition = position;
+    m_Nodes[position.x][position.y].setColor(sf::Color::Red);
+}
+
+void Grid::addWall(const sf::Vector2i& position)
+{
+    m_Walls.push_back(position);
+    m_Nodes[position.x][position.y].setColor(sf::Color::Cyan);
 }
 
 sf::Vector2i Grid::getGridSize() const
@@ -33,6 +48,8 @@ sf::Vector2i Grid::getNodeSize() const
 void Grid::reset()
 {
     createNodes();
+    
+    m_Walls.clear();
 }
 
 void Grid::createNodes()

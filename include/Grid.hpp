@@ -13,7 +13,9 @@ public:
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-    void setNodeColor(const sf::Vector2i& position, const sf::Color& color);
+    void setStartPosition(const sf::Vector2i& position);
+    void setEndPosition(const sf::Vector2i& position);
+    void addWall(const sf::Vector2i& position);
 
     sf::Vector2i getGridSize() const;
     sf::Vector2i getNodeSize() const;
@@ -33,6 +35,11 @@ private:
 
     std::vector<std::vector<Node>> m_Nodes;
     std::vector<sf::RectangleShape> m_Lines;
+
+    sf::Vector2i m_StartPosition;
+    sf::Vector2i m_EndPosition;
+
+    std::vector<sf::Vector2i> m_Walls;
 };
 
 #endif
