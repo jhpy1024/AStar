@@ -30,6 +30,11 @@ sf::Vector2i Grid::getNodeSize() const
     return { GRID_SIZE.x / NUM_NODES, GRID_SIZE.y / NUM_NODES };
 }
 
+void Grid::reset()
+{
+    createNodes();
+}
+
 void Grid::createNodes()
 {
     for (int x = 0; x < NUM_NODES; ++x)

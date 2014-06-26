@@ -37,6 +37,9 @@ void Application::handleInput()
             case sf::Event::MouseButtonPressed:
                 handleMousePress(event);
                 break;
+            case sf::Event::KeyPressed:
+                handleKeyPress(event);
+                break;
             default:
                 break;
         }
@@ -82,4 +85,35 @@ void Application::handleMousePress(const sf::Event& event)
             m_Grid.setNodeColor({ gridX, gridY }, sf::Color::Blue);
         }
     }
+}
+
+void Application::handleKeyPress(const sf::Event& event)
+{
+    if (event.key.code == sf::Keyboard::Space)
+    {
+        beginSearch();
+    }
+    else if (event.key.code == sf::Keyboard::Escape)
+    {
+        reset();
+    }
+}
+
+void Application::beginSearch()
+{
+
+}
+
+void Application::reset()
+{
+    m_Window.setTitle("Set Start Position");
+
+    m_IsStartSet = false;
+    m_IsEndSet = false;
+
+    m_StartPosition = { -1, -1 };
+    m_EndPosition = { -1, -1 };
+
+    m_Walls.clear();
+    m_Grid.reset();
 }

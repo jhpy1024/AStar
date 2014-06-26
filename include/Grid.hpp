@@ -18,6 +18,8 @@ public:
     sf::Vector2i getGridSize() const;
     sf::Vector2i getNodeSize() const;
 
+    void reset();
+
 private:
     void createNodes();
     void createLines();

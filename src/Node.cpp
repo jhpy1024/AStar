@@ -73,5 +73,5 @@ void Node::setColor(const sf::Color& color)
 void Node::createShape()
 {
     m_Shape.setPosition(sf::Vector2f(m_Position.x * m_Size.x, m_Position.y * m_Size.y));
-    m_Shape.setFillColor({ 230, 230, 230 });
+    m_Shape.setFillColor(sf::Color::White);
 }
