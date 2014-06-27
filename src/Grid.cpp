@@ -37,6 +37,15 @@ void Grid::addWall(const sf::Vector2i& position)
     m_Nodes[position.x][position.y].setColor(sf::Color::Cyan);
 }
 
+void Grid::removeWall(const sf::Vector2i& position)
+{
+    if (std::find(m_Walls.begin(), m_Walls.end(), position) != m_Walls.end())
+    {
+        m_Walls.erase(std::find(m_Walls.begin(), m_Walls.end(), position));
+        m_Nodes[position.x][position.y].setColor(sf::Color::White);
+    }
+}
+
 sf::Vector2i Grid::getGridSize() const
 {
     return GRID_SIZE;

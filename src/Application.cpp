@@ -58,11 +58,11 @@ void Application::draw()
 
 void Application::handleMousePress(const sf::Event& event)
 {
+    auto gridX = event.mouseButton.x / m_Grid.getNodeSize().x;
+    auto gridY = event.mouseButton.y / m_Grid.getNodeSize().y;
+
     if (event.mouseButton.button == sf::Mouse::Left)
     {
-        auto gridX = event.mouseButton.x / m_Grid.getNodeSize().x;
-        auto gridY = event.mouseButton.y / m_Grid.getNodeSize().y;
-
         if (!m_IsStartSet)
         {
             m_IsStartSet = true;
@@ -72,13 +72,17 @@ void Application::handleMousePress(const sf::Event& event)
         else if (!m_IsEndSet)
         {
             m_IsEndSet = true;
-            m_Window.setTitle("Add Walls");
+            m_Window.setTitle("Add Walls (Left Click) | Remove Walls (Right Click)");
             m_Grid.setEndPosition({ gridX, gridY });
         }
         else
         {
             m_Grid.addWall({ gridX, gridY });
         }
+    }
+    else if (event.mouseButton.button == sf::Mouse::Right)
+    {
+        m_Grid.removeWall({ gridX, gridY });
     }
 }
 

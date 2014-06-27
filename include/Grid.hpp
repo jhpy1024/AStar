@@ -16,6 +16,7 @@ public:
     void setStartPosition(const sf::Vector2i& position);
     void setEndPosition(const sf::Vector2i& position);
     void addWall(const sf::Vector2i& position);
+    void removeWall(const sf::Vector2i& position);
 
     sf::Vector2i getGridSize() const;
     sf::Vector2i getNodeSize() const;
