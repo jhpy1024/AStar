@@ -5,9 +5,13 @@
 Grid::Grid(int numNodes, const sf::Vector2i& gridSize)
     : NUM_NODES(numNodes)
     , GRID_SIZE(gridSize)
+    , HORIZONTAL_COST(10)
+    , VERTICAL_COST(10)
+    , DIAGONAL_COST(14)
     , m_Nodes(NUM_NODES, std::vector<Node>(NUM_NODES, Node({ -1, -1 }, { 0, 0 })))
     , m_StartPosition(-1, -1)
     , m_EndPosition(-1, -1)
+    , m_HasFoundPath(false)
 {
     createNodes();
     createLines();
@@ -61,6 +65,9 @@ void Grid::reset()
     createNodes();
 
     m_Walls.clear();
+    m_Path.clear();
+
+    m_HasFoundPath = false;
 }
 
 void Grid::beginSearch()
@@ -77,21 +84,27 @@ void Grid::beginSearch()
     {
         auto currentNodePosition = getLowestScoredNode(openSet);
         if (currentNodePosition == m_EndPosition)
-            ;// TODO: reconstruct path
+        {
+            std::printf("Found path: ");
+            m_HasFoundPath = true;
+            buildPath(m_EndPosition);
+            printPath();
+            break;
+        }
 
         openSet.erase(std::find(openSet.begin(), openSet.end(), currentNodePosition));
         closedSet.push_back(currentNodePosition);
 
         for (auto& neighborPosition : getNeighborNodes(currentNodePosition))
         {
-            if (std::find(closedSet.begin(), closedSet.end(), currentNodePosition) != closedSet.end())
+            if (std::find(closedSet.begin(), closedSet.end(), neighborPosition) != closedSet.end())
                 continue;
 
             auto& currentNode = m_Nodes[currentNodePosition.x][currentNodePosition.y];
             auto tentativeMovementCost = currentNode.getMovementCost()
-                                       + calculateDistance(currentNodePosition, neighborPosition);
+                                       + calculateMovementCost(currentNodePosition, neighborPosition);
 
-            bool neighborInOpenSet = std::find(openSet.begin(), openSet.end(), neighborPosition) != openSet.end();
+            bool neighborInOpenSet = (std::find(openSet.begin(), openSet.end(), neighborPosition) != openSet.end());
             auto& neighborNode = m_Nodes[neighborPosition.x][neighborPosition.y];
             if (!neighborInOpenSet || (tentativeMovementCost < neighborNode.getMovementCost()))
             {
@@ -105,6 +118,9 @@ void Grid::beginSearch()
             }
         }
     }
+
+    if (!m_HasFoundPath)
+        std::printf("Found no path :(\n");
 }
 
 void Grid::createNodes()
@@ -164,18 +180,17 @@ int Grid::calculateHeuristicCost(const sf::Vector2i& from, const sf::Vector2i& t
 {
     auto deltaX = std::abs(to.x - from.x);
     auto deltaY = std::abs(to.y - from.y);
-    auto heuristicCost = std::ceil((deltaX + deltaY) / 2);
+    auto heuristicCost = std::ceil((deltaX + deltaY));
 
     return heuristicCost;
 }
 
-float Grid::calculateDistance(const sf::Vector2i& from, const sf::Vector2i& to) const
+int Grid::calculateMovementCost(const sf::Vector2i& from, const sf::Vector2i& to) const
 {
-    auto deltaX = to.x - from.x;
-    auto deltaY = to.y - from.y;
-    auto distance = std::sqrt((deltaX * deltaX) + (deltaY * deltaY));
+    auto deltaX = std::abs(to.x - from.x);
+    auto deltaY = std::abs(to.y - from.y);
 
-    return distance;
+    return HORIZONTAL_COST * deltaX + VERTICAL_COST * deltaY;
 }
 
 sf::Vector2i Grid::getLowestScoredNode(const std::vector<sf::Vector2i>& nodes) const
@@ -335,10 +350,10 @@ std::vector<sf::Vector2i> Grid::getAdjacentNodes(const sf::Vector2i& from, const
 
 bool Grid::isNodeOnEdge(const sf::Vector2i& node) const
 {
-    return (node.x != 0)
-        && (node.x != NUM_NODES - 1)
-        && (node.y != 0)
-        && (node.y != NUM_NODES - 1);
+    return (node.x == 0)
+        || (node.x == NUM_NODES - 1)
+        || (node.y == 0)
+        || (node.y == NUM_NODES - 1);
 }
 
 bool Grid::isNodeOnLeft(const sf::Vector2i& node) const
@@ -359,4 +374,35 @@ bool Grid::isNodeOnTop(const sf::Vector2i& node) const
 bool Grid::isNodeOnBottom(const sf::Vector2i& node) const
 {
     return node.y == NUM_NODES - 1;
+}
+
+void Grid::buildPath(const sf::Vector2i& position)
+{
+    auto& currentNode = m_Nodes[position.x][position.y];
+    auto parentPosition = currentNode.getParentPosition();
+
+    if ((parentPosition.x == -1) && (parentPosition.y == -1))
+    {
+        m_Path.push_back(position);
+        return;
+    }
+
+    m_Path.push_back(position);
+    buildPath(parentPosition);
+}
+
+void Grid::printPath()
+{
+    for (int i = m_Path.size() - 1; i >= 0; --i)
+    {
+        std::printf("(%i, %i)", m_Path[i].x, m_Path[i].y);
+        if (i > 0)
+            std::printf("->");
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TEMPORARY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if ((sf::Vector2i(m_Path[i].x, m_Path[i].y) != m_StartPosition) && (sf::Vector2i(m_Path[i].x, m_Path[i].y) != m_EndPosition))
+            m_Nodes[m_Path[i].x][m_Path[i].y].setColor(sf::Color::Yellow);
+    }
+
+    std::printf("\n");
 }

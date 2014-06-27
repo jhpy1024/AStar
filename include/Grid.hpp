@@ -45,7 +45,7 @@ private:
     void drawLines(sf::RenderTarget& target, sf::RenderStates states) const;
 
     int calculateHeuristicCost(const sf::Vector2i& from, const sf::Vector2i& to) const;
-    float calculateDistance(const sf::Vector2i& from, const sf::Vector2i& to) const;
+    int calculateMovementCost(const sf::Vector2i& from, const sf::Vector2i& to) const;
 
     sf::Vector2i getLowestScoredNode(const std::vector<sf::Vector2i>& nodes) const;
     std::vector<sf::Vector2i> getNeighborNodes(const sf::Vector2i& node) const;
@@ -58,9 +58,15 @@ private:
     bool isNodeOnTop(const sf::Vector2i& node) const;
     bool isNodeOnBottom(const sf::Vector2i& node) const;
 
+    void buildPath(const sf::Vector2i& position);
+    void printPath();
+
 private:
     const int NUM_NODES;
     const sf::Vector2i GRID_SIZE;
+    const int HORIZONTAL_COST;
+    const int VERTICAL_COST;
+    const int DIAGONAL_COST;
 
     std::vector<std::vector<Node>> m_Nodes;
     std::vector<sf::RectangleShape> m_Lines;
@@ -69,6 +75,9 @@ private:
     sf::Vector2i m_EndPosition;
 
     std::vector<sf::Vector2i> m_Walls;
+
+    bool m_HasFoundPath;
+    std::vector<sf::Vector2i> m_Path;
 };
 
 #endif
