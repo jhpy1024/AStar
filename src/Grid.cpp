@@ -215,26 +215,25 @@ std::vector<sf::Vector2i> Grid::getNeighborNodes(const sf::Vector2i& node) const
     if (!isNodeOnEdge(node))
     {
         auto adjNodes = getAdjacentNodes(node,
-            { Direction::North, Direction::NorthEast, Direction::East, Direction::SouthEast,
-              Direction::South, Direction::SouthWest, Direction::West, Direction::NorthWest });
+            { Direction::North, Direction::East, Direction::South, Direction::West });
         neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
     }
     else if (isNodeOnLeft(node))
     {
         if (isNodeOnTop(node))
         {
-            auto adjNodes = getAdjacentNodes(node, { Direction::East, Direction::SouthEast, Direction::South });
+            auto adjNodes = getAdjacentNodes(node, { Direction::East, Direction::South });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else if (isNodeOnBottom(node))
         {
-            auto adjNodes = getAdjacentNodes(node, { Direction::North, Direction::NorthEast, Direction::East });
+            auto adjNodes = getAdjacentNodes(node, { Direction::North, Direction::East });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else
         {
             auto adjNodes = getAdjacentNodes(node,
-                { Direction::North, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::South });
+                { Direction::North, Direction::East, Direction::South });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
     }
@@ -242,18 +241,18 @@ std::vector<sf::Vector2i> Grid::getNeighborNodes(const sf::Vector2i& node) const
     {
         if (isNodeOnTop(node))
         {
-            auto adjNodes = getAdjacentNodes(node, { Direction::South, Direction::SouthWest, Direction::West });
+            auto adjNodes = getAdjacentNodes(node, { Direction::South, Direction::West });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else if (isNodeOnBottom(node))
         {
-            auto adjNodes = getAdjacentNodes(node, { Direction::West, Direction::NorthWest, Direction::North });
+            auto adjNodes = getAdjacentNodes(node, { Direction::West, Direction::North });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else
         {
             auto adjNodes = getAdjacentNodes(node,
-                { Direction::South, Direction::SouthWest, Direction::West, Direction::NorthWest, Direction::North });
+                { Direction::South, Direction::West, Direction::North });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
     }
@@ -261,18 +260,18 @@ std::vector<sf::Vector2i> Grid::getNeighborNodes(const sf::Vector2i& node) const
     {
         if (isNodeOnLeft(node))
         {
-            auto adjNodes = getAdjacentNodes(node, { Direction::East, Direction::SouthEast, Direction::South });
+            auto adjNodes = getAdjacentNodes(node, { Direction::East, Direction::South });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else if (isNodeOnRight(node))
         {
-            auto adjNodes = getAdjacentNodes(node, { Direction::South, Direction::SouthWest, Direction::West });
+            auto adjNodes = getAdjacentNodes(node, { Direction::South, Direction::West });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else
         {
             auto adjNodes = getAdjacentNodes(node,
-                { Direction::East, Direction::SouthEast, Direction::South, Direction::SouthWest, Direction::West });
+                { Direction::East, Direction::South, Direction::West });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
     }
@@ -280,18 +279,18 @@ std::vector<sf::Vector2i> Grid::getNeighborNodes(const sf::Vector2i& node) const
     {
         if (isNodeOnLeft(node))
         {
-            auto adjNodes = getAdjacentNodes(node, { Direction::North, Direction::NorthEast, Direction::East });
+            auto adjNodes = getAdjacentNodes(node, { Direction::North, Direction::East });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else if (isNodeOnRight(node))
         {
-            auto adjNodes = getAdjacentNodes(node, { Direction::West, Direction::NorthWest, Direction::North });
+            auto adjNodes = getAdjacentNodes(node, { Direction::West, Direction::North });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else
         {
             auto adjNodes = getAdjacentNodes(node,
-                { Direction::West, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::East });
+                { Direction::West, Direction::North, Direction::East });
             neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
     }
