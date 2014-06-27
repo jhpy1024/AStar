@@ -199,109 +199,138 @@ std::vector<sf::Vector2i> Grid::getNeighborNodes(const sf::Vector2i& node) const
 
     if (!isNodeOnEdge(node))
     {
-        neighbors.push_back({ node.x, node.y - 1 });        // North
-        neighbors.push_back({ node.x + 1, node.y - 1 });    // North East
-        neighbors.push_back({ node.x + 1, node.y });        // East
-        neighbors.push_back({ node.x + 1, node.y + 1 });    // South East
-        neighbors.push_back({ node.x, node.y + 1 });        // South
-        neighbors.push_back({ node.x - 1, node.y - 1 });    // South West
-        neighbors.push_back({ node.x - 1, node.y });        // West
-        neighbors.push_back({ node.x - 1, node.y + 1 });    // North West
+        auto adjNodes = getAdjacentNodes(node,
+            { Direction::North, Direction::NorthEast, Direction::East, Direction::SouthEast,
+              Direction::South, Direction::SouthWest, Direction::West, Direction::NorthWest });
+        neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
     }
     else if (isNodeOnLeft(node))
     {
         if (isNodeOnTop(node))
         {
-            neighbors.push_back({ node.x + 1, node.y });        // East
-            neighbors.push_back({ node.x + 1, node.y + 1 });    // South East
-            neighbors.push_back({ node.x, node.y + 1 });        // South
+            auto adjNodes = getAdjacentNodes(node, { Direction::East, Direction::SouthEast, Direction::South });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else if (isNodeOnBottom(node))
         {
-            neighbors.push_back({ node.x, node.y - 1 });        // North
-            neighbors.push_back({ node.x + 1, node.y - 1 });    // North East
-            neighbors.push_back({ node.x + 1, node.y });        // East
+            auto adjNodes = getAdjacentNodes(node, { Direction::North, Direction::NorthEast, Direction::East });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else
         {
-            neighbors.push_back({ node.x, node.y - 1 });        // North
-            neighbors.push_back({ node.x, node.y - 1 });        // North East
-            neighbors.push_back({ node.x + 1, node.y });        // East
-            neighbors.push_back({ node.x + 1, node.y + 1 });    // South East
-            neighbors.push_back({ node.x, node.y + 1 });        // South
+            auto adjNodes = getAdjacentNodes(node,
+                { Direction::North, Direction::NorthEast, Direction::East, Direction::SouthEast, Direction::South });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
     }
     else if (isNodeOnRight(node))
     {
         if (isNodeOnTop(node))
         {
-            neighbors.push_back({ node.x, node.y + 1 });        // South
-            neighbors.push_back({ node.x - 1, node.y + 1 });    // South West
-            neighbors.push_back({ node.x - 1, node.y });        // West
+            auto adjNodes = getAdjacentNodes(node, { Direction::South, Direction::SouthWest, Direction::West });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else if (isNodeOnBottom(node))
         {
-            neighbors.push_back({ node.x - 1, node.y });        // West
-            neighbors.push_back({ node.x - 1, node.y - 1 });    // North West
-            neighbors.push_back({ node.x, node.y - 1 });        // North
+            auto adjNodes = getAdjacentNodes(node, { Direction::West, Direction::NorthWest, Direction::North });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else
         {
-            neighbors.push_back({ node.x, node.y + 1 });        // South
-            neighbors.push_back({ node.x - 1, node.y + 1 });    // South West
-            neighbors.push_back({ node.x - 1, node.y });        // West
-            neighbors.push_back({ node.x - 1, node.y - 1 });    // North West
-            neighbors.push_back({ node.x, node.y - 1 });        // North
+            auto adjNodes = getAdjacentNodes(node,
+                { Direction::South, Direction::SouthWest, Direction::West, Direction::NorthWest, Direction::North });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
     }
     else if (isNodeOnTop(node))
     {
         if (isNodeOnLeft(node))
         {
-            neighbors.push_back({ node.x + 1, node.y });        // East
-            neighbors.push_back({ node.x + 1, node.y + 1 });    // South East
-            neighbors.push_back({ node.x, node.y + 1 });        // South
+            auto adjNodes = getAdjacentNodes(node, { Direction::East, Direction::SouthEast, Direction::South });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else if (isNodeOnRight(node))
         {
-            neighbors.push_back({ node.x, node.y + 1 });        // South
-            neighbors.push_back({ node.x - 1, node.y + 1 });    // South West
-            neighbors.push_back({ node.x - 1, node.y });        // West
+            auto adjNodes = getAdjacentNodes(node, { Direction::South, Direction::SouthWest, Direction::West });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else
         {
-            neighbors.push_back({ node.x + 1, node.y });        // East
-            neighbors.push_back({ node.x + 1, node.y + 1 });    // South East
-            neighbors.push_back({ node.x, node.y + 1 });        // South
-            neighbors.push_back({ node.x - 1, node.y + 1 });    // South West
-            neighbors.push_back({ node.x - 1, node.y });        // West
+            auto adjNodes = getAdjacentNodes(node,
+                { Direction::East, Direction::SouthEast, Direction::South, Direction::SouthWest, Direction::West });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
     }
     else if (isNodeOnBottom(node))
     {
         if (isNodeOnLeft(node))
         {
-            neighbors.push_back({ node.x, node.y - 1 });        // North
-            neighbors.push_back({ node.x + 1, node.y - 1 });    // North East
-            neighbors.push_back({ node.x + 1, node.y });        // East
+            auto adjNodes = getAdjacentNodes(node, { Direction::North, Direction::NorthEast, Direction::East });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else if (isNodeOnRight(node))
         {
-            neighbors.push_back({ node.x - 1, node.y });        // West
-            neighbors.push_back({ node.x - 1, node.y - 1 });    // North West
-            neighbors.push_back({ node.x, node.y - 1 });        // North
+            auto adjNodes = getAdjacentNodes(node, { Direction::West, Direction::NorthWest, Direction::North });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
         else
         {
-            neighbors.push_back({ node.x - 1, node.y });        // West
-            neighbors.push_back({ node.x - 1, node.y - 1 });    // North West
-            neighbors.push_back({ node.x, node.y - 1 });        // North
-            neighbors.push_back({ node.x + 1, node.y - 1 });    // North East
-            neighbors.push_back({ node.x + 1, node.y });        // East
+            auto adjNodes = getAdjacentNodes(node,
+                { Direction::West, Direction::NorthWest, Direction::North, Direction::NorthEast, Direction::East });
+            neighbors.insert(neighbors.end(), adjNodes.begin(), adjNodes.end());
         }
     }
 
     return neighbors;
+}
+
+sf::Vector2i Grid::getAdjacentNode(const sf::Vector2i& from, Direction direction) const
+{
+    sf::Vector2i adjacentNode(-1, -1);
+
+    switch (direction)
+    {
+        case Direction::North:
+            adjacentNode = { from.x, from.y - 1 };
+            break;
+        case Direction::NorthEast:
+            adjacentNode = { from.x + 1, from.y - 1 };
+            break;
+        case Direction::East:
+            adjacentNode = { from.x + 1, from.y };
+            break;
+        case Direction::SouthEast:
+            adjacentNode = { from.x + 1, from.y + 1 };
+            break;
+        case Direction::South:
+            adjacentNode = { from.x, from.y + 1 };
+            break;
+        case Direction::SouthWest:
+            adjacentNode = { from.x - 1, from.y + 1 };
+            break;
+        case Direction::West:
+            adjacentNode = { from.x - 1, from.y };
+            break;
+        case Direction::NorthWest:
+            adjacentNode = { from.x - 1, from.y - 1 };
+            break;
+        default:
+            break;
+    }
+
+    return adjacentNode;
+}
+
+std::vector<sf::Vector2i> Grid::getAdjacentNodes(const sf::Vector2i& from, const std::vector<Direction>& directions) const
+{
+    std::vector<sf::Vector2i> adjacentNodes;
+
+    for (const auto& direction : directions)
+    {
+        adjacentNodes.push_back(getAdjacentNode(from, direction));
+    }
+
+    return adjacentNodes;
 }
 
 bool Grid::isNodeOnEdge(const sf::Vector2i& node) const

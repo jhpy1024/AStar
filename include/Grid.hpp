@@ -6,6 +6,18 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
+enum class Direction
+{
+    North,
+    NorthEast,
+    East,
+    SouthEast,
+    South,
+    SouthWest,
+    West,
+    NorthWest
+};
+
 class Grid : public sf::Drawable
 {
 public:
@@ -37,6 +49,8 @@ private:
 
     sf::Vector2i getLowestScoredNode(const std::vector<sf::Vector2i>& nodes) const;
     std::vector<sf::Vector2i> getNeighborNodes(const sf::Vector2i& node) const;
+    sf::Vector2i getAdjacentNode(const sf::Vector2i& from, Direction direction) const;
+    std::vector<sf::Vector2i> getAdjacentNodes(const sf::Vector2i& from, const std::vector<Direction>& directions) const;
 
     bool isNodeOnEdge(const sf::Vector2i& node) const;
     bool isNodeOnLeft(const sf::Vector2i& node) const;
