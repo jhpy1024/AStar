@@ -33,11 +33,6 @@ private:
     int m_MovementCost;
     int m_HeuristicCost;
 
-    static sf::Font m_Font;
-    sf::Text m_ScoreText;
-    sf::Text m_MovementCostText;
-    sf::Text m_HeuristicCostText;
-
     sf::Vector2i m_Size;
     sf::RectangleShape m_Shape;
 };

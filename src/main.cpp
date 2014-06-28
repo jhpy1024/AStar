@@ -2,7 +2,7 @@
 
 int main()
 {
-    Application application(500, 500, 10);
+    Application application(600, 600, 10);
     application.run();
 
     return 0;
