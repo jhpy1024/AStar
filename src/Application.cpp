@@ -1,15 +1,28 @@
 #include "Application.hpp"
 
 Application::Application(int width, int height, int numNodes)
-    : WIDTH(width)
-    , HEIGHT(height)
-    , NUM_NODES(numNodes)
-    , m_Window(sf::VideoMode(WIDTH, HEIGHT), "Set Start Position", sf::Style::Close)
-    , m_Grid(NUM_NODES, { WIDTH, HEIGHT })
+    : m_Width(width)
+    , m_Height(height)
+    , m_NumNodes(numNodes)
+    , m_Window(sf::VideoMode(m_Width, m_Height), "Set Start Position", sf::Style::Close)
+    , m_Grid(m_NumNodes, { m_Width, m_Height })
     , m_IsStartSet(false)
     , m_IsEndSet(false)
+    , m_LoadedFile(false)
 {
 
+}
+
+Application::Application(int width, int height, const std::string& file)
+    : m_Width(width)
+    , m_Height(height)
+    , m_Window(sf::VideoMode(m_Width, m_Height), "Set Start Position", sf::Style::Close)
+    , m_Grid(file, { m_Width, m_Height })
+    , m_IsStartSet(false)
+    , m_IsEndSet(false)
+    , m_LoadedFile(true)
+    , m_File(file)
+{
 }
 
 void Application::run()

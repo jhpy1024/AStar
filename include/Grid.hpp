@@ -22,6 +22,7 @@ class Grid : public sf::Drawable
 {
 public:
     Grid(int numNodes, const sf::Vector2i& gridSize);
+    Grid(const std::string& file, const sf::Vector2i& gridSize);
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
@@ -40,6 +41,10 @@ public:
 private:
     void createNodes();
     void createLines();
+
+    void parseNodes(const std::string& file);
+    std::vector<std::vector<std::string>> extractNodes(const std::string& file);
+    int parseNumNodes(const std::string& file) const;
 
     void drawNodes(sf::RenderTarget& target, sf::RenderStates states) const;
     void drawLines(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -63,7 +68,7 @@ private:
     void colorPath();
 
 private:
-    const int NUM_NODES;
+    int m_NumNodes;
     const sf::Vector2i GRID_SIZE;
     const int HORIZONTAL_COST;
     const int VERTICAL_COST;

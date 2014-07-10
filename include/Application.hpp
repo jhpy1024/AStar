@@ -9,6 +9,7 @@ class Application
 {
 public:
     Application(int width, int height, int numNodes);
+    Application(int width, int height, const std::string& file);
 
     void run();
     void handleInput();
@@ -23,9 +24,9 @@ private:
     void reset();
 
 private:
-    const int WIDTH;
-    const int HEIGHT;
-    const int NUM_NODES;
+    int m_Width;
+    int m_Height;
+    int m_NumNodes;
 
     sf::RenderWindow m_Window;
 
@@ -33,6 +34,9 @@ private:
 
     bool m_IsStartSet;
     bool m_IsEndSet;
+
+    bool m_LoadedFile;
+    std::string m_File;
 };
 
 #endif

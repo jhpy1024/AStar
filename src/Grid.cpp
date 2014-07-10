@@ -1,20 +1,44 @@
 #include "Grid.hpp"
 
 #include <cassert>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 Grid::Grid(int numNodes, const sf::Vector2i& gridSize)
-    : NUM_NODES(numNodes)
+    : m_NumNodes(numNodes)
     , GRID_SIZE(gridSize)
     , HORIZONTAL_COST(10)
     , VERTICAL_COST(10)
     , DIAGONAL_COST(14)
-    , m_Nodes(NUM_NODES, std::vector<Node>(NUM_NODES, Node({ -1, -1 }, { 0, 0 })))
+    , m_Nodes(m_NumNodes, std::vector<Node>(m_NumNodes, Node({ -1, -1 }, { 0, 0 })))
     , m_StartPosition(-1, -1)
     , m_EndPosition(-1, -1)
     , m_HasFoundPath(false)
 {
     createNodes();
     createLines();
+}
+
+Grid::Grid(const std::string& file, const sf::Vector2i& gridSize)
+    : GRID_SIZE(gridSize)
+    , HORIZONTAL_COST(10)
+    , VERTICAL_COST(10)
+    , DIAGONAL_COST(14)
+    , m_StartPosition(-1, -1)
+    , m_EndPosition(-1, -1)
+    , m_HasFoundPath(false)
+
+{
+    // Multiply by 2 and add 1 because we need
+    // extra columns and rows for the walls
+    m_NumNodes = parseNumNodes(file) * 2 + 1;
+    m_Nodes = std::vector<std::vector<Node>>(m_NumNodes, std::vector<Node>(m_NumNodes, Node({ -1, -1 }, { 0, 0 })));
+
+    createNodes();
+    createLines();
+
+    parseNodes(file);
 }
 
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -37,8 +61,11 @@ void Grid::setEndPosition(const sf::Vector2i& position)
 
 void Grid::addWall(const sf::Vector2i& position)
 {
-    m_Walls.push_back(position);
-    m_Nodes[position.x][position.y].setColor(sf::Color::Cyan);
+    if (std::find(m_Walls.begin(), m_Walls.end(), position) == m_Walls.end())
+    {
+        m_Walls.push_back(position);
+        m_Nodes[position.x][position.y].setColor(sf::Color::Black);
+    }
 }
 
 void Grid::removeWall(const sf::Vector2i& position)
@@ -57,7 +84,7 @@ sf::Vector2i Grid::getGridSize() const
 
 sf::Vector2i Grid::getNodeSize() const
 {
-    return { GRID_SIZE.x / NUM_NODES, GRID_SIZE.y / NUM_NODES };
+    return { GRID_SIZE.x / m_NumNodes, GRID_SIZE.y / m_NumNodes };
 }
 
 void Grid::reset()
@@ -126,12 +153,12 @@ void Grid::beginSearch()
 
 void Grid::createNodes()
 {
-    for (int x = 0; x < NUM_NODES; ++x)
+    for (int x = 0; x < m_NumNodes; ++x)
     {
-        for (int y = 0; y < NUM_NODES; ++y)
+        for (int y = 0; y < m_NumNodes; ++y)
         {
             sf::Vector2i position(x, y);
-            sf::Vector2i size(GRID_SIZE.x / NUM_NODES, GRID_SIZE.y / NUM_NODES);
+            sf::Vector2i size(GRID_SIZE.x / m_NumNodes, GRID_SIZE.y / m_NumNodes);
 
             Node node(position, size);
             m_Nodes[x][y] = node;
@@ -141,13 +168,13 @@ void Grid::createNodes()
 
 void Grid::createLines()
 {
-    for (int x = 0; x < NUM_NODES; ++x)
+    for (int x = 0; x < m_NumNodes; ++x)
     {
-        for (int y = 0; y < NUM_NODES; ++y)
+        for (int y = 0; y < m_NumNodes; ++y)
         {
             sf::RectangleShape shape;
             shape.setFillColor(sf::Color::Black);
-            shape.setPosition(x * (GRID_SIZE.x / NUM_NODES), y * (GRID_SIZE.y / NUM_NODES));
+            shape.setPosition(x * (GRID_SIZE.x / m_NumNodes), y * (GRID_SIZE.y / m_NumNodes));
 
             // Horizontal line
             shape.setSize({ GRID_SIZE.x, 1.f });
@@ -160,11 +187,112 @@ void Grid::createLines()
     }
 }
 
+void Grid::parseNodes(const std::string& file)
+{
+    auto nodeStrings = extractNodes(file);
+
+    //// Add border walls
+    //for (int i = 0; i < m_NumNodes; ++i)
+    //{
+    //    addWall({ i, 0 });
+    //    addWall({ 0, i });
+    //    addWall({ i, m_NumNodes - 1 });
+    //    addWall({ m_NumNodes - 1, i });
+    //}
+
+    for (unsigned x = 0; x < nodeStrings.size(); ++x)
+    {
+        for (unsigned y = 0; y < nodeStrings[x].size(); ++y)
+        {
+            bool hasNorthWall = (nodeStrings[y][x][0] == '0');
+            bool hasEastWall = (nodeStrings[y][x][1] == '0');
+            bool hasSouthWall = (nodeStrings[y][x][2] == '0');
+            bool hasWestWall = (nodeStrings[y][x][3] == '0');
+
+            auto cellX = x * 2 + 1;
+            auto cellY = y * 2 + 1;
+
+            sf::Vector2i north = { cellX, cellY - 1 },
+                         northeast = { cellX + 1, cellY - 1 }, 
+                         east = { cellX + 1, cellY },
+                         southeast = { cellX + 1, cellY + 1 },
+                         south = { cellX, cellY + 1 },
+                         southwest = { cellX - 1, cellY + 1 },
+                         west = { cellX - 1, cellY },
+                         northwest = { cellX - 1, cellY - 1 };
+            
+            if ((hasNorthWall && hasEastWall) || (hasEastWall && hasNorthWall))
+                { addWall(north); addWall(northeast); addWall(east); }
+            if ((hasNorthWall && hasWestWall) || (hasWestWall && hasNorthWall))
+                { addWall(north); addWall(northwest); addWall(west); }
+            if ((hasSouthWall && hasEastWall) || (hasEastWall && hasSouthWall))
+                { addWall(south); addWall(southeast); addWall(east); }
+            if ((hasSouthWall && hasWestWall) || (hasWestWall && hasSouthWall))
+                { addWall(south); addWall(southwest); addWall(west); }
+            if (hasNorthWall)
+                addWall(north);
+            if (hasEastWall)
+                addWall(east);
+            if (hasSouthWall)
+                addWall(south);
+            if (hasWestWall)
+                addWall(west);
+        }
+    }
+}
+
+std::vector<std::vector<std::string>> Grid::extractNodes(const std::string& file)
+{
+    std::vector<std::vector<std::string>> nodeStrings;
+
+    std::ifstream inputFile(file);
+    std::string line;
+    while (std::getline(inputFile, line))
+    {
+        std::vector<std::string> row;
+
+        std::stringstream strStream(line);
+        std::string node;
+        while (std::getline(strStream, node, ' '))
+        {
+            row.push_back(node);
+        }
+
+        nodeStrings.push_back(row);
+    }
+
+    return nodeStrings;
+}
+
+int Grid::parseNumNodes(const std::string& file) const
+{
+    int numNodes = 0;
+
+    std::ifstream inputFile(file);
+    
+    std::string line;
+    if (std::getline(inputFile, line))
+    {
+        std::stringstream strStream(line);
+        std::string node;
+        while (std::getline(strStream, node, ' '))
+            ++numNodes;
+    }
+    else
+    {
+        std::cerr << "Error parsing file, it has no lines!" << std::endl;
+    }
+    
+    std::printf("Num nodes = %i\n", numNodes);
+
+    return numNodes;
+}
+
 void Grid::drawNodes(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    for (int x = 0; x < NUM_NODES; ++x)
+    for (int x = 0; x < m_NumNodes; ++x)
     {
-        for (int y = 0; y < NUM_NODES; ++y)
+        for (int y = 0; y < m_NumNodes; ++y)
         {
             target.draw(m_Nodes[x][y]);
         }
@@ -351,9 +479,9 @@ std::vector<sf::Vector2i> Grid::getAdjacentNodes(const sf::Vector2i& from, const
 bool Grid::isNodeOnEdge(const sf::Vector2i& node) const
 {
     return (node.x == 0)
-        || (node.x == NUM_NODES - 1)
+        || (node.x == m_NumNodes - 1)
         || (node.y == 0)
-        || (node.y == NUM_NODES - 1);
+        || (node.y == m_NumNodes - 1);
 }
 
 bool Grid::isNodeOnLeft(const sf::Vector2i& node) const
@@ -363,7 +491,7 @@ bool Grid::isNodeOnLeft(const sf::Vector2i& node) const
 
 bool Grid::isNodeOnRight(const sf::Vector2i& node) const
 {
-    return node.x == NUM_NODES - 1;
+    return node.x == m_NumNodes - 1;
 }
 
 bool Grid::isNodeOnTop(const sf::Vector2i& node) const
@@ -373,7 +501,7 @@ bool Grid::isNodeOnTop(const sf::Vector2i& node) const
 
 bool Grid::isNodeOnBottom(const sf::Vector2i& node) const
 {
-    return node.y == NUM_NODES - 1;
+    return node.y == m_NumNodes - 1;
 }
 
 void Grid::buildPath(const sf::Vector2i& position)
