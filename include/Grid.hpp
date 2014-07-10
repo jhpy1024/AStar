@@ -60,6 +60,7 @@ private:
 
     void buildPath(const sf::Vector2i& position);
     void printPath();
+    void colorPath();
 
 private:
     const int NUM_NODES;

@@ -89,6 +89,7 @@ void Grid::beginSearch()
             m_HasFoundPath = true;
             buildPath(m_EndPosition);
             printPath();
+            colorPath();
             break;
         }
 
@@ -398,10 +399,21 @@ void Grid::printPath()
         if (i > 0)
             std::printf("->");
 
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TEMPORARY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if ((sf::Vector2i(m_Path[i].x, m_Path[i].y) != m_StartPosition) && (sf::Vector2i(m_Path[i].x, m_Path[i].y) != m_EndPosition))
-            m_Nodes[m_Path[i].x][m_Path[i].y].setColor(sf::Color::Yellow);
-    }
+            }
 
     std::printf("\n");
+}
+
+void Grid::colorPath()
+{
+    for (int i = m_Path.size() - 1; i >= 0; --i)
+    {
+        bool isStartCell = (sf::Vector2i(m_Path[i].x, m_Path[i].y) == m_StartPosition);
+        bool isEndCell = (sf::Vector2i(m_Path[i].x, m_Path[i].y) == m_EndPosition);
+
+        if (!isStartCell && !isEndCell)
+        {
+            m_Nodes[m_Path[i].x][m_Path[i].y].setColor(sf::Color::Yellow);
+        }
+    }
 }
