@@ -65,7 +65,7 @@ private:
 
     void buildPath(const sf::Vector2i& position);
     void printPath();
-    void colorPath();
+    void colorPath(const sf::Color& color = sf::Color::Yellow);
 
 private:
     int m_NumNodes;
@@ -84,6 +84,8 @@ private:
 
     bool m_HasFoundPath;
     std::vector<sf::Vector2i> m_Path;
+
+    bool m_IsMaze;
 };
 
 #endif

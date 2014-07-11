@@ -15,6 +15,7 @@ Grid::Grid(int numNodes, const sf::Vector2i& gridSize)
     , m_StartPosition(-1, -1)
     , m_EndPosition(-1, -1)
     , m_HasFoundPath(false)
+    , m_IsMaze(false)
 {
     createNodes();
     createLines();
@@ -28,7 +29,7 @@ Grid::Grid(const std::string& file, const sf::Vector2i& gridSize)
     , m_StartPosition(-1, -1)
     , m_EndPosition(-1, -1)
     , m_HasFoundPath(false)
-
+    , m_IsMaze(true)
 {
     // Multiply by 2 and add 1 because we need
     // extra columns and rows for the walls
@@ -89,11 +90,16 @@ sf::Vector2i Grid::getNodeSize() const
 
 void Grid::reset()
 {
-    createNodes();
+    if (m_IsMaze)
+    {
+        colorPath(sf::Color::White);
+        m_Nodes[m_StartPosition.x][m_StartPosition.y].setColor(sf::Color::White);
+        m_Nodes[m_EndPosition.x][m_EndPosition.y].setColor(sf::Color::White);
+    }
+    else
+        createNodes();
 
-    m_Walls.clear();
     m_Path.clear();
-
     m_HasFoundPath = false;
 }
 
@@ -589,7 +595,7 @@ void Grid::printPath()
     std::printf("\n");
 }
 
-void Grid::colorPath()
+void Grid::colorPath(const sf::Color& color)
 {
     for (int i = m_Path.size() - 1; i >= 0; --i)
     {
@@ -598,7 +604,7 @@ void Grid::colorPath()
 
         if (!isStartCell && !isEndCell)
         {
-            m_Nodes[m_Path[i].x][m_Path[i].y].setColor(sf::Color::Yellow);
+            m_Nodes[m_Path[i].x][m_Path[i].y].setColor(color);
         }
     }
 }
