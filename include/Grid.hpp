@@ -26,8 +26,8 @@ public:
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-    void setStartPosition(const sf::Vector2i& position);
-    void setEndPosition(const sf::Vector2i& position);
+    bool setStartPosition(const sf::Vector2i& position);
+    bool setEndPosition(const sf::Vector2i& position);
     void addWall(const sf::Vector2i& position);
     void removeWall(const sf::Vector2i& position);
 

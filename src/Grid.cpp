@@ -48,21 +48,35 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
     drawLines(target, states);
 }
 
-void Grid::setStartPosition(const sf::Vector2i& position)
+bool Grid::setStartPosition(const sf::Vector2i& position)
 {
-    m_StartPosition = position;
-    m_Nodes[position.x][position.y].setColor(sf::Color::Green);
+    if (std::find(m_Walls.begin(), m_Walls.end(), position) == m_Walls.end())
+    {
+        m_StartPosition = position;
+        m_Nodes[position.x][position.y].setColor(sf::Color::Green);
+        return true;
+    }
+
+    return false;
 }
 
-void Grid::setEndPosition(const sf::Vector2i& position)
+bool Grid::setEndPosition(const sf::Vector2i& position)
 {
-    m_EndPosition = position;
-    m_Nodes[position.x][position.y].setColor(sf::Color::Red);
+    if (std::find(m_Walls.begin(), m_Walls.end(), position) == m_Walls.end())
+    {
+        m_EndPosition = position;
+        m_Nodes[position.x][position.y].setColor(sf::Color::Red);
+        return true;
+    }
+
+    return false;
 }
 
 void Grid::addWall(const sf::Vector2i& position)
 {
-    if (std::find(m_Walls.begin(), m_Walls.end(), position) == m_Walls.end())
+    if (std::find(m_Walls.begin(), m_Walls.end(), position) == m_Walls.end()
+     && std::find(m_Walls.begin(), m_Walls.end(), m_StartPosition) == m_Walls.end()
+     && std::find(m_Walls.begin(), m_Walls.end(), m_EndPosition) == m_Walls.end())
     {
         m_Walls.push_back(position);
         m_Nodes[position.x][position.y].setColor(sf::Color::Black);

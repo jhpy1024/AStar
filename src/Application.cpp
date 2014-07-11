@@ -78,15 +78,19 @@ void Application::handleMousePress(const sf::Event& event)
     {
         if (!m_IsStartSet)
         {
-            m_IsStartSet = true;
-            m_Window.setTitle("Set End Position");
-            m_Grid.setStartPosition({ gridX, gridY });
+            if (m_Grid.setStartPosition({ gridX, gridY }))
+            {
+                m_IsStartSet = true;
+                m_Window.setTitle("Set End Position");
+            }
         }
         else if (!m_IsEndSet)
         {
-            m_IsEndSet = true;
-            m_Window.setTitle("Add Walls (Left Click) | Remove Walls (Right Click)");
-            m_Grid.setEndPosition({ gridX, gridY });
+            if (m_Grid.setEndPosition({ gridX, gridY }))
+            {
+                m_IsEndSet = true;
+                m_Window.setTitle("Add Walls (Left Click) | Remove Walls (Right Click)");
+            }
         }
         else
         {
