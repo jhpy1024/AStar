@@ -191,19 +191,21 @@ void Grid::parseNodes(const std::string& file)
 {
     auto nodeStrings = extractNodes(file);
 
-    //// Add border walls
-    //for (int i = 0; i < m_NumNodes; ++i)
-    //{
-    //    addWall({ i, 0 });
-    //    addWall({ 0, i });
-    //    addWall({ i, m_NumNodes - 1 });
-    //    addWall({ m_NumNodes - 1, i });
-    //}
+    // Add initial walls
+    for (int i = 0; i < m_NumNodes; ++i)
+    {
+        addWall({ i, 0 });
+        addWall({ 0, i });
+        addWall({ i, m_NumNodes - 1 });
+        addWall({ m_NumNodes - 1, i });
+    }
 
     for (unsigned x = 0; x < nodeStrings.size(); ++x)
     {
         for (unsigned y = 0; y < nodeStrings[x].size(); ++y)
         {
+            // TODO:
+            //      If two adjacent cells have a common wall, add that wall between those two cells
             bool hasNorthWall = (nodeStrings[y][x][0] == '0');
             bool hasEastWall = (nodeStrings[y][x][1] == '0');
             bool hasSouthWall = (nodeStrings[y][x][2] == '0');
@@ -222,21 +224,78 @@ void Grid::parseNodes(const std::string& file)
                          northwest = { cellX - 1, cellY - 1 };
             
             if ((hasNorthWall && hasEastWall) || (hasEastWall && hasNorthWall))
-                { addWall(north); addWall(northeast); addWall(east); }
+            {
+                addWall(north); addWall(northeast); addWall(east);
+            }
             if ((hasNorthWall && hasWestWall) || (hasWestWall && hasNorthWall))
-                { addWall(north); addWall(northwest); addWall(west); }
+            {
+                addWall(north); addWall(northwest); addWall(west);
+            }
             if ((hasSouthWall && hasEastWall) || (hasEastWall && hasSouthWall))
-                { addWall(south); addWall(southeast); addWall(east); }
+            {
+                addWall(south); addWall(southeast); addWall(east);
+            }
             if ((hasSouthWall && hasWestWall) || (hasWestWall && hasSouthWall))
-                { addWall(south); addWall(southwest); addWall(west); }
+            {  
+                addWall(south); addWall(southwest); addWall(west);
+            }
             if (hasNorthWall)
+            {
                 addWall(north);
+
+                if ((x != 0) && (x != nodeStrings.size() - 1))
+                {
+                    // If the cell to the left/right also has a north
+                    // wall, add a wall inbetween the two cells
+                    if (nodeStrings[y][x-1][0] == '0')
+                        addWall({ cellX - 1, cellY - 1 });
+                    if (nodeStrings[y][x+1][0] == '0')
+                        addWall({ cellX + 1, cellY - 1 });
+                }
+            }
             if (hasEastWall)
+            {
                 addWall(east);
+
+                if ((y != 0) && (y != nodeStrings.size() - 1))
+                {
+                    // If the cell above/below also has a east
+                    // wall, add a wall inbetween the two cells
+                    if (nodeStrings[y-1][x][1] == '0')
+                        addWall({ cellX + 1, cellY - 1 });
+                    if (nodeStrings[y+1][x][2] == '0')
+                        addWall({ cellX + 1, cellY + 1 });
+                }
+            }
             if (hasSouthWall)
+            {
                 addWall(south);
+
+                if ((x != 0) && (x != nodeStrings.size() - 1))
+                {
+                    // If the cell to the left/right also has a south
+                    // wall, add a wall inbetween the two cells
+                    if (nodeStrings[y][x-1][2] == '0')
+                        addWall({ cellX - 1, cellY + 1 });
+                    if (nodeStrings[y][x+1][2] == '0')
+                        addWall({ cellX + 1, cellY + 1 });
+                }
+
+            }
             if (hasWestWall)
+            {
                 addWall(west);
+
+                if ((y != 0) && (y != nodeStrings.size() - 1))
+                {
+                    // If the cell above/below also has a west
+                    // wall, add a wall inbetween the two cells
+                    if (nodeStrings[y-1][x][3] == '0')
+                        addWall({ cellX - 1, cellY - 1 });
+                    if (nodeStrings[y+1][x][3] == '0')
+                        addWall({ cellX - 1, cellY + 1 });
+                }
+            }
         }
     }
 }
