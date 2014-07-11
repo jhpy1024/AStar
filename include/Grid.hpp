@@ -33,6 +33,7 @@ public:
 
     sf::Vector2i getGridSize() const;
     sf::Vector2i getNodeSize() const;
+    int getNumNodes() const;
 
     void reset();
 

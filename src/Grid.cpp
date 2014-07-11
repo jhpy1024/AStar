@@ -102,6 +102,11 @@ sf::Vector2i Grid::getNodeSize() const
     return { GRID_SIZE.x / m_NumNodes, GRID_SIZE.y / m_NumNodes };
 }
 
+int Grid::getNumNodes() const
+{
+    return m_NumNodes;
+}
+
 void Grid::reset()
 {
     if (m_IsMaze)

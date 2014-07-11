@@ -74,6 +74,10 @@ void Application::handleMousePress(const sf::Event& event)
     auto gridX = event.mouseButton.x / m_Grid.getNodeSize().x;
     auto gridY = event.mouseButton.y / m_Grid.getNodeSize().y;
 
+    // If the position of the click is out of bounds, just return
+    if (gridX < 0 || gridX >= m_Grid.getNumNodes() || gridY < 0 || gridY >= m_Grid.getNumNodes())
+        return;
+
     if (event.mouseButton.button == sf::Mouse::Left)
     {
         if (!m_IsStartSet)
