@@ -204,8 +204,6 @@ void Grid::parseNodes(const std::string& file)
     {
         for (unsigned y = 0; y < nodeStrings[x].size(); ++y)
         {
-            // TODO:
-            //      If two adjacent cells have a common wall, add that wall between those two cells
             bool hasNorthWall = (nodeStrings[y][x][0] == '0');
             bool hasEastWall = (nodeStrings[y][x][1] == '0');
             bool hasSouthWall = (nodeStrings[y][x][2] == '0');
